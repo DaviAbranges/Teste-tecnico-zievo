@@ -1,34 +1,22 @@
+// modalAtom.ts
 import { atom } from 'jotai';
-import { ReactNode } from 'react';
 
 export type ModalType = 'alert' | 'success' | 'error' | 'form';
-export const modalAtom = atom(<
-  {
-    open: boolean;
-    type: ModalType;
-    closeOnConfirm?: boolean;
-    onConfirm: () => void;
-    content: {
-      title: string;
-      message?: string;
-      element?: ReactNode;
-      colors?: string;
-      icon?: ReactNode;
-      confirmButtonText?: string | boolean;
-      cancelButtonText?: string | boolean;
-    };
-    onClose?: () => void;
-  }
->{
+
+export interface ModalState {
+  open: boolean;
+  type: ModalType;
+  title: string;
+  message?: string;
+  confirmButtonText?: string;
+  cancelButtonText?: string;
+  onConfirm?: () => void;
+  onCancel?: () => void;
+  onClose?: () => void;
+}
+
+export const modalAtom = atom<ModalState>({
   open: false,
   type: 'alert',
-  closeOnConfirm: true,
-  colors: '',
-  onClose: () => {},
-  onConfirm: () => {},
-  showIcon: true,
-  content: {
-    title: '',
-    message: '',
-  },
+  title: '',
 });

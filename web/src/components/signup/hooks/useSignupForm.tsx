@@ -1,10 +1,10 @@
 import { useForm } from 'react-hook-form';
-import { signinFormSchema, SigninFormSchema } from '../formSchema';
+import { signupFormSchema, SignUpFormSchema } from '../formSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-export const useSigninForm = () => {
-  const form = useForm<SigninFormSchema>({
-    resolver: zodResolver(signinFormSchema),
+export const useSignUpForm = () => {
+  const form = useForm<SignUpFormSchema>({
+    resolver: zodResolver(signupFormSchema),
     defaultValues: {
       name: '',
       email: '',

@@ -10,10 +10,17 @@ body {
   color: #333;
 }
 
-input {
-  outline: none;
-  background-color: white;
-}
+/* input {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  max-width: 400px;
+  transition: 0.3s;
+  font-size: 14px;
+  height: 54px;
+  background-color: #f4f4f4;
+  color: #333;
+} */
 
 input:focus {
   border: 1px solid #333;

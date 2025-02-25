@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const signinFormSchema = z.object({
+export const signupFormSchema = z.object({
   name: z
     .string({ required_error: 'Nome é obrigatório' })
     .min(1, { message: 'Nome é obrigatório' }),
@@ -18,4 +18,4 @@ export const signinFormSchema = z.object({
     .max(50),
 });
 
-export type SigninFormSchema = z.infer<typeof signinFormSchema>;
+export type SignUpFormSchema = z.infer<typeof signupFormSchema>;

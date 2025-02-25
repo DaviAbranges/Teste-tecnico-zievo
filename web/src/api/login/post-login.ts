@@ -1,8 +1,8 @@
-import { ISignin } from '../../interfaces/signin';
+import { ILogin } from '../../interfaces/login';
 import { api } from '../../lib/axios';
 
-export async function signin(body: ISignin) {
-  const { data } = await api.post('/users', { ...body });
+export async function login(body: ILogin) {
+  const { data } = await api.post('/login', { ...body });
 
   return data;
 }

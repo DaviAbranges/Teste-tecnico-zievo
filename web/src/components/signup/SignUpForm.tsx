@@ -1,61 +1,62 @@
-import { useSetAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import '../../App.css';
-import { useSignin } from '../../hooks/signin/useSignin';
-import { ISignin } from '../../interfaces/signin';
-import { useSigninForm } from './hooks/useSigninForm';
+import { useSignUp } from '../../hooks/signup/useSignUp';
+import { ISignUp } from '../../interfaces/signup';
+import { useSignUpForm } from './hooks/useSignupForm';
 import { modalAtom } from '../../store/modal';
 import { useNavigate } from 'react-router-dom';
 
-interface SignInFormProps {
+interface SignUpFormProps {
   switchToLogin: () => void;
 }
 
-export const SignInForm = ({ switchToLogin }: SignInFormProps) => {
-  const setModal = useSetAtom(modalAtom);
+export const SignUpForm = ({ switchToLogin }: SignUpFormProps) => {
+  const [, setModal] = useAtom(modalAtom);
   const navigate = useNavigate();
   const {
+    reset,
     register,
     handleSubmit,
     formState: { errors },
     trigger,
-  } = useSigninForm();
-  const { mutateAsync: signin } = useSignin();
-  const onSubmit = async (data: ISignin) => {
+  } = useSignUpForm();
+  const { mutateAsync: signup } = useSignUp();
+
+  const onSubmit = async (data: ISignUp) => {
     const isValid = await trigger();
     if (!isValid) return false;
 
     try {
-      await signin({
+      await signup({
         body: {
           name: data.name,
           email: data.email,
           password: data.password,
         },
       });
+
       setModal({
         open: true,
         type: 'success',
-        onClose: () => null,
-        onConfirm: () => null,
-        content: {
-          title: 'Categoria criada com sucesso!',
-        },
+        title: 'Conta criada com sucesso!',
+        message: 'Parabéns, sua conta foi criada com êxito.',
+        onConfirm: () => navigate('/home-page'),
+        onClose: () => navigate('/home-page'),
       });
-      navigate('/login');
-    } catch (error) {}
-    setModal({
-      open: true,
-      type: 'error',
-      onConfirm: () => null,
-      content: {
+    } catch (error) {
+      setModal({
+        open: true,
+        type: 'error',
+        onConfirm: () => null,
         title: 'Sua solicitação não pode ser concluída.',
-      },
-    });
+      });
+      reset();
+    }
   };
   return (
     <>
-      <h1>Crie sua conta</h1>
       <form className="form" onSubmit={handleSubmit(onSubmit)}>
+        <h1>Crie sua conta</h1>
         <div className="form-group">
           <input
             type="text"
@@ -84,7 +85,7 @@ export const SignInForm = ({ switchToLogin }: SignInFormProps) => {
           )}
         </div>
         <button type="submit">Cadastrar</button>
-        <button type="button" onClick={switchToLogin}>
+        <button type="button" onClick={switchToLogin} className="create-return">
           Voltar para Login
         </button>
       </form>

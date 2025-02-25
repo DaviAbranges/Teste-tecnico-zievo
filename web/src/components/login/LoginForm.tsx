@@ -1,42 +1,60 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import '../../App.css';
+import { useLogin } from '../../hooks/login/useLogin';
+import { useLoginForm } from './hooks/useLoginForm';
+import { modalAtom } from '../../store/modal';
+import { useSetAtom } from 'jotai';
+import { useNavigate } from 'react-router-dom';
 
 interface LoginFormProps {
-  switchToSignIn: () => void;
+  switchToSignUp: () => void;
 }
 
-export const LoginForm = ({ switchToSignIn }: LoginFormProps) => {
+export const LoginForm = ({ switchToSignUp }: LoginFormProps) => {
+  const setModal = useSetAtom(modalAtom);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm();
+  } = useLoginForm();
+  const { mutateAsync: login } = useLogin();
 
-  const [error, setError] = useState<string | null>(null);
-
-  const onSubmit = (data: { email: string; password: string }) => {
+  const onSubmit = async (data: { email: string; password: string }) => {
     const { email, password } = data;
-    // Exemplo de validação simple
+    try {
+      await login({ body: { email, password } });
+      console.log(data);
+      setModal({
+        open: true,
+        type: 'success',
+        onClose: () => navigate('/homePage'),
+        onConfirm: () => navigate('/homePage'),
+        title: 'Login efetuado com sucesso!',
+      });
+    } catch (error) {
+      setModal({
+        open: true,
+        type: 'error',
+        onConfirm: () => null,
+        title: 'Sua solicitação não pode ser concluída.',
+      });
+    }
   };
 
   return (
     <>
-      <h1>Faça seu login</h1>
-      {/* Ative o onSubmit para que o handleSubmit funcione */}
-      {/* onSubmit={handleSubmit(onSubmit)} */}
-      <form className="form">
+      <form className="form" onSubmit={handleSubmit(onSubmit)}>
+        <h1 className="login">Faça seu login</h1>
         <div className="form-group">
           <input
             type="email"
             id="email"
             placeholder="Digite seu e-mail"
+            className="with-icon"
             {...register('email', { required: 'E-mail é obrigatório!' })}
           />
-          {/* {errors.email && (
-            <span className="error">{errors.email.message}</span>
-          )} */}
         </div>
+        {errors.email && <span className="error">{errors.email.message}</span>}
 
         <div className="form-group">
           <input
@@ -46,12 +64,10 @@ export const LoginForm = ({ switchToSignIn }: LoginFormProps) => {
             autoComplete="off"
             {...register('password', { required: 'Senha é obrigatória!' })}
           />
-          {/* {errors.password && (
+          {errors.password && (
             <span className="error">{errors.password.message}</span>
-          )} */}
+          )}
         </div>
-
-        {error && <div className="error">{error}</div>}
 
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Carregando...' : 'Entrar'}
@@ -62,7 +78,11 @@ export const LoginForm = ({ switchToSignIn }: LoginFormProps) => {
           <label htmlFor="keepLogged">Manter-me conectado</label>
         </div>
 
-        <button type="button" onClick={switchToSignIn}>
+        <button
+          type="button"
+          onClick={switchToSignUp}
+          className="create-return"
+        >
           Criar nova conta
         </button>
       </form>

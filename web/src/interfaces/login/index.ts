@@ -1,5 +1,5 @@
-export interface LoginBody {
-  username: string;
+export interface ILogin {
+  email: string;
   password: string;
 }
 

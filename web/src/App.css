@@ -15,19 +15,29 @@
 /* Lado esquerdo (45% da tela com fundo verde) */
 .div-logo {
   width: 45%;
-  background-color: green;
+  background-color: #535ee0;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* Lado direito (55% da tela com fundo preto) */
+h1 {
+  color: #535ee0;
+  font-size: 26px;
+  margin-bottom: 42px;
+  align-self: self-start;
+}
+
+img {
+  width: 320px;
+}
+
 .login-form {
   width: 55%;
   padding: 30px;
   color: white;
-  background-color: black;
+  background-color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -35,17 +45,9 @@
   height: 100vh;
 }
 
-/* Título centralizado */
-.login-form h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-/* Formulário centralizado */
 .form {
   width: 100%;
-  max-width: 400px;
+  max-width: 380px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -56,15 +58,16 @@
   margin-bottom: 20px;
 }
 
+/* Estilo dos inputs */
 .form-group input {
   width: 100%;
   padding: 12px;
   font-size: 14px;
   border: 1px solid #ddd;
-  border-radius: 6px;
-  outline: none;
-  background-color: #333;
-  color: white;
+  height: 46px;
+  border-radius: 9px;
+  background-color: #f4f4f4; /* Cor de fundo clara */
+  color: #333; /* Cor do texto escura */
 }
 
 .form-group input:focus {
@@ -82,14 +85,35 @@
 
 button {
   width: 100%;
-  padding: 12px;
+  padding: 15px;
   font-size: 16px;
-  background-color: #007bff;
+  background-color: #535ee0;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  margin-top: 10px;
+  margin-top: 15px;
+}
+
+button:last-child {
+  margin-top: 0;
+  color: #535ee0;
+  background-color: white;
+  border: 1px solid #535ee0;
+  margin-top: 15px;
+}
+
+button:last-child:hover {
+  background-color: #535fe0e7 !important;
+  color: white;
+}
+
+.create-return {
+  color: #535ee0;
+  font-size: 14px;
+  margin-top: 15px;
+  text-decoration: none;
+  color: white;
 }
 
 button:disabled {
@@ -97,7 +121,7 @@ button:disabled {
 }
 
 button:hover:not(:disabled) {
-  background-color: #0056b3;
+  background-color: #535fe0e7;
 }
 
 .keep-logged {
@@ -113,4 +137,5 @@ button:hover:not(:disabled) {
 
 .keep-logged label {
   font-size: 14px;
+  color: #353535cb;
 }
