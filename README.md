@@ -42,7 +42,9 @@ Esta aplicação permite que os usuários registrem os livros que leram, atribua
 1. Clone o repositório:
 
 ```bash
-git@github.com:DaviAbranges/Teste-tecnico-zievo.git
+git clone git@github.com:DaviAbranges/Teste-tecnico-zievo.git
+```
+```bash
 cd Teste-tecnico-zievo
 ```
 
