@@ -88,6 +88,11 @@ php artisan migrate
 
 6. Rodar o servidor local:
 ```bash
+php artisan key:generate
+```
+
+7. Rodar o servidor local:
+```bash
 php artisan serve
 ```
 
