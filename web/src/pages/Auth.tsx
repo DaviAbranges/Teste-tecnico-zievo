@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import '../App.css';
 // import logo from '../assets/logo.svg';
-import logo2 from '../assets/1662164284493-removebg-preview.png';
-import { LoginForm } from '../components/login/LoginForm'; // Verifique se o caminho está correto
-import { SignUpForm } from '../components/signup/SignUpForm'; // Verifique se o caminho está correto
+import logo2 from '../assets/WhatsApp_Image_2025-02-25_at_17.35.06-removebg-preview.png';
+import { LoginForm } from '../components/login/LoginForm';
+import { SignUpForm } from '../components/signup/SignUpForm';
 
 export const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
