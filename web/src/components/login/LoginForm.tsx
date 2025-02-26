@@ -19,10 +19,10 @@ export const LoginForm = ({ switchToSignUp }: LoginFormProps) => {
   } = useLoginForm();
   const { mutateAsync: login } = useLogin();
 
+  // Função crítica: realiza login, armazena o token e dispara modal de sucesso/erro
   const onSubmit = async (data: { email: string; password: string }) => {
-    const { email, password } = data;
     try {
-      const { token } = await login({ body: { email, password } });
+      const { token } = await login({ body: data });
       localStorage.setItem('token', token);
       setModal({
         open: true,
@@ -42,50 +42,44 @@ export const LoginForm = ({ switchToSignUp }: LoginFormProps) => {
   };
 
   return (
-    <>
-      <form className="form" onSubmit={handleSubmit(onSubmit)}>
-        <h1 className="login">Faça seu login</h1>
-        <div className="form-group">
-          <input
-            type="email"
-            id="email"
-            placeholder="Digite seu e-mail"
-            className="with-icon"
-            {...register('email', { required: 'E-mail é obrigatório!' })}
-          />
-        </div>
-        {errors.email && <span className="error">{errors.email.message}</span>}
+    <form className="form" onSubmit={handleSubmit(onSubmit)}>
+      <h1 className="login">Faça seu login</h1>
+      <div className="form-group">
+        <input
+          type="email"
+          id="email"
+          placeholder="Digite seu e-mail"
+          className="with-icon"
+          {...register('email', { required: 'E-mail é obrigatório!' })}
+        />
+      </div>
+      {errors.email && <span className="error">{errors.email.message}</span>}
 
-        <div className="form-group">
-          <input
-            type="password"
-            id="password"
-            placeholder="Digite sua senha"
-            autoComplete="off"
-            {...register('password', { required: 'Senha é obrigatória!' })}
-          />
-          {errors.password && (
-            <span className="error">{errors.password.message}</span>
-          )}
-        </div>
+      <div className="form-group">
+        <input
+          type="password"
+          id="password"
+          placeholder="Digite sua senha"
+          autoComplete="off"
+          {...register('password', { required: 'Senha é obrigatória!' })}
+        />
+      </div>
+      {errors.password && (
+        <span className="error">{errors.password.message}</span>
+      )}
 
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Carregando...' : 'Entrar'}
-        </button>
+      <button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? 'Carregando...' : 'Entrar'}
+      </button>
 
-        <div className="keep-logged">
-          <input type="checkbox" id="keepLogged" />
-          <label htmlFor="keepLogged">Manter-me conectado</label>
-        </div>
+      <div className="keep-logged">
+        <input type="checkbox" id="keepLogged" />
+        <label htmlFor="keepLogged">Manter-me conectado</label>
+      </div>
 
-        <button
-          type="button"
-          onClick={switchToSignUp}
-          className="create-return"
-        >
-          Criar nova conta
-        </button>
-      </form>
-    </>
+      <button type="button" onClick={switchToSignUp} className="create-return">
+        Criar nova conta
+      </button>
+    </form>
   );
 };
