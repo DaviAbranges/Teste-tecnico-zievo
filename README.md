@@ -56,10 +56,11 @@ cd Teste-tecnico-zievo
    cd api
    ```
 
-2. Configure as variáveis de ambiente no arquivo `.env`:
+2. Abra o seu editor de código e configure as variáveis de ambiente no arquivo `.env`:
+
 
 ```
-3. DB_CONNECTION=pgsql
+DB_CONNECTION=pgsql
 DB_HOST=localhost
 DB_PORT=5432
 DB_DATABASE=library
