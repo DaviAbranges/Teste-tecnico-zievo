@@ -40,8 +40,7 @@ export const SignUpForm = ({ switchToLogin }: SignUpFormProps) => {
         type: 'success',
         title: 'Conta criada com sucesso!',
         message: 'Parabéns, sua conta foi criada com êxito.',
-        onConfirm: () => navigate('/home-page'),
-        onClose: () => navigate('/home-page'),
+        onConfirm: () => switchToLogin(),
       });
     } catch (error) {
       setModal({

@@ -22,8 +22,8 @@ export const LoginForm = ({ switchToSignUp }: LoginFormProps) => {
   const onSubmit = async (data: { email: string; password: string }) => {
     const { email, password } = data;
     try {
-      await login({ body: { email, password } });
-      console.log(data);
+      const { token } = await login({ body: { email, password } });
+      localStorage.setItem('token', token);
       setModal({
         open: true,
         type: 'success',

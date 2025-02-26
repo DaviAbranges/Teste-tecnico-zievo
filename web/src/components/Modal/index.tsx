@@ -2,7 +2,8 @@
 import React from 'react';
 import { useAtom } from 'jotai';
 import { modalAtom } from '../../store/modal';
-import './stylesModal.css';
+import '../../styles/modal/modal.css';
+import { BookForm } from '../books/bookForm';
 
 export const Modal: React.FC = () => {
   const [modal, setModal] = useAtom(modalAtom);
@@ -13,7 +14,6 @@ export const Modal: React.FC = () => {
     if (modal.onConfirm) {
       modal.onConfirm();
     }
-    // Fecha o modal após a confirmação
     setModal({ ...modal, open: false });
   };
 
@@ -32,7 +32,6 @@ export const Modal: React.FC = () => {
           <>
             <h2>{modal.title}</h2>
             {modal.message && <p>{modal.message}</p>}
-            {/* Chama handleConfirm para navegação */}
             <button onClick={handleConfirm}>OK</button>
           </>
         );
@@ -45,6 +44,8 @@ export const Modal: React.FC = () => {
             <button onClick={handleClose}>Cancelar</button>
           </>
         );
+      case 'form':
+        return <BookForm />;
       case 'alert':
       default:
         return (
@@ -59,7 +60,11 @@ export const Modal: React.FC = () => {
 
   return (
     <div className="modal-overlay">
-      <div className="modal-container">{renderContent()}</div>
+      <div
+        className={`${modal.type === 'form' ? 'modal-container--form ' : 'modal-container '}`}
+      >
+        {renderContent()}
+      </div>
     </div>
   );
 };

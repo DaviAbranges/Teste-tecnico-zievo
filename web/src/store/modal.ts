@@ -1,5 +1,6 @@
 // modalAtom.ts
 import { atom } from 'jotai';
+import { IBook } from '../interfaces/books/IBook';
 
 export type ModalType = 'alert' | 'success' | 'error' | 'form';
 
@@ -13,6 +14,7 @@ export interface ModalState {
   onConfirm?: () => void;
   onCancel?: () => void;
   onClose?: () => void;
+  formData?: IBook;
 }
 
 export const modalAtom = atom<ModalState>({
