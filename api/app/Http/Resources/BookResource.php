@@ -20,6 +20,7 @@ class BookResource extends JsonResource
             'synopsis'   => $this->synopsis,
             'review'     => $this->review,
             'rating'     => $this->rating,
+            'year'       => $this->year, 
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

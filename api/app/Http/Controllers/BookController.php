@@ -33,6 +33,7 @@ class BookController extends Controller
             'synopsis' => 'required|string',
             'review'   => 'nullable|string',
             'rating'   => 'nullable|integer|min:1|max:5',
+            'year'     => 'nullable|string|max:4',
         ]);
 
         // Processar upload da imagem, se enviada
@@ -66,6 +67,7 @@ class BookController extends Controller
             'synopsis' => 'required|string',
             'review'   => 'nullable|string',
             'rating'   => 'nullable|integer|min:1|max:5',
+            'year'     => 'nullable|string|max:4',
         ]);
 
         // Se houver nova imagem, processa o upload e remove a antiga (se existir)
