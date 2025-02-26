@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import '../App.css';
-// import logo from '../assets/logo.svg';
-import logo2 from '../assets/WhatsApp_Image_2025-02-25_at_17.35.06-removebg-preview.png';
+import logo from '../assets/logo.png';
 import { LoginForm } from '../components/login/LoginForm';
 import { SignUpForm } from '../components/signup/SignUpForm';
 
@@ -11,7 +10,7 @@ export const Auth = () => {
   return (
     <div className="login-container">
       <div className="div-logo">
-        <img src={logo2} alt="Logo" />
+        <img src={logo} alt="Logo" />
       </div>
       <div className="login-form">
         {isSignUp ? (
