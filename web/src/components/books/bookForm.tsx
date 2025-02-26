@@ -67,12 +67,11 @@ export const BookForm = () => {
         open: true,
         type: 'success',
         onClose: () => {},
-        onConfirm: () => {},
+        onConfirm: () => navigate(0),
         title: bookId
           ? 'Livro atualizado com sucesso!'
           : 'Livro criado com sucesso!',
       });
-      navigate(0);
     } catch (error) {
       setModal({
         open: true,
@@ -92,6 +91,24 @@ export const BookForm = () => {
       onConfirm: () => navigate('/homePage'),
     });
   };
+
+  const renderSelectField = (name: 'genre', placeholder: string) => (
+    <>
+      <select className="input-field " {...register(name)}>
+        <option value="" disabled>
+          {placeholder}
+        </option>
+        <option value="Ficção Científica">Ficção Científica</option>
+        <option value="Romance">Romance</option>
+        <option value="Mistério">Mistério</option>
+        <option value="Fantasia">Fantasia</option>
+        <option value="Biografia">Biografia</option>
+        <option value="Autoajuda">Autoajuda</option>
+        <option value="Outro">Outro</option>
+      </select>
+      {errors[name] && <span className="error">{errors[name]?.message}</span>}
+    </>
+  );
 
   const renderInputField = (name: FieldName, placeholder: string) => (
     <>
@@ -123,12 +140,12 @@ export const BookForm = () => {
         <h1>Informações do Livro</h1>
         <div className="form-group-book">
           {renderInputField('title', 'Informe o título')}
-          {renderInputField('genre', 'Informe o gênero')}
+          {renderSelectField('genre', 'Informe o gênero')}
           {renderInputField('author', 'Informe o nome do autor')}
-          {renderTextArea('synopsis', 'Digite um breve relato sobre o livro')}
-          {renderTextArea('review', 'Escreva sua opinião sobre o livro')}
-          {/* Ano */}
           <select className="input-field year-field" {...register('year')}>
+            <option value="" disabled>
+              Selecione o ano
+            </option>
             {Array.from({ length: 50 }, (_, index) => {
               const currentYear = new Date().getFullYear();
               const year = currentYear - index;
@@ -139,6 +156,9 @@ export const BookForm = () => {
               );
             })}
           </select>
+          {renderTextArea('synopsis', 'Digite um breve relato sobre o livro')}
+          {renderTextArea('review', 'Escreva sua opinião sobre o livro')}
+          {/* Ano */}
           {errors.year && <span className="error">{errors.year?.message}</span>}
 
           {/* Avaliação */}

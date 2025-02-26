@@ -1,0 +1,91 @@
+/* Estilo geral para a tela */
+.view-book-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  justify-content: center;
+  padding: 20px;
+  width: 100%;
+  margin: 0 auto;
+  background-color: #3f4db5;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Título principal */
+.view-book-container h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 20px;
+  align-self: center;
+}
+
+/* Estilo para os detalhes do livro */
+.book-details {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 50%;
+}
+
+.book-details h2 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.book-details p {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.book-details strong {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Estilo para o botão de voltar */
+.btn {
+  background-color: #5c6bc0;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #3f4db5;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .view-book-container {
+    padding: 15px;
+  }
+
+  .view-book-container h1 {
+    font-size: 2rem;
+  }
+
+  .book-details h2 {
+    font-size: 1.5rem;
+  }
+
+  .book-details p {
+    font-size: 1rem;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.2rem;
+  }
+}

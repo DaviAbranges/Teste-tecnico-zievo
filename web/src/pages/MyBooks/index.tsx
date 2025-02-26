@@ -5,10 +5,13 @@ import { IBook } from '../../interfaces/books/IBook';
 import { useSetAtom } from 'jotai';
 import { modalAtom } from '../../store/modal';
 import { deleteBook } from '../../api/books/delete-books';
+import { useNavigate } from 'react-router-dom';
+import { FaEdit, FaTrashAlt, FaEye } from 'react-icons/fa';
 
 export default function MyBooks() {
   const [searchTerm, setSearchTerm] = useState('');
   const setModal = useSetAtom(modalAtom);
+  const navigate = useNavigate();
 
   const [books, setBooks] = useState<IBook[]>([]);
   const { mutateAsync: allBooks } = useGetBooks();
@@ -100,6 +103,9 @@ export default function MyBooks() {
       : text;
   };
 
+  const handleViewClick = (book: IBook) => {
+    navigate(`/viewBook/${book.id}`);
+  };
   return (
     <div className="container">
       <div className="header">
@@ -125,6 +131,8 @@ export default function MyBooks() {
             <th>Análise</th>
             <th>Avaliação</th>
             <th>-</th>
+            <th>-</th>
+            <th>-</th>
           </tr>
         </thead>
         <tbody>
@@ -139,11 +147,27 @@ export default function MyBooks() {
                 <td>{truncateText(book.review, 12)}</td>
                 <td>{book.rating}</td>
                 <td>
-                  <button onClick={() => handleEditClick(book)}>editar</button>
+                  <button
+                    onClick={() => handleEditClick(book)}
+                    className="icon-button"
+                  >
+                    <FaEdit />{' '}
+                  </button>
                 </td>
                 <td>
-                  <button onClick={() => handleDeleteClick(book)}>
-                    deletar
+                  <button
+                    onClick={() => handleDeleteClick(book)}
+                    className="icon-button"
+                  >
+                    <FaTrashAlt />
+                  </button>
+                </td>
+                <td>
+                  <button
+                    onClick={() => handleViewClick(book)}
+                    className="icon-button"
+                  >
+                    <FaEye />
                   </button>
                 </td>
               </tr>
