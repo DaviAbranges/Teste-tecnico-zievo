@@ -1,14 +1,21 @@
 import { ChangeEvent, useEffect, useMemo, useState } from 'react';
-import '../../styles/books/myBooks.css';
 import { useGetBooks } from '../../hooks/books/useGetBooks';
 import { IBook } from '../../interfaces/books/IBook';
 import { useSetAtom } from 'jotai';
 import { modalAtom } from '../../store/modal';
 import { deleteBook } from '../../api/books/delete-books';
 import { useNavigate } from 'react-router-dom';
-import { FaEdit, FaTrashAlt, FaEye } from 'react-icons/fa';
+import { FaSignOutAlt } from 'react-icons/fa';
 import { generateYearRange } from '../../utils/dateUtils';
 import { FiltersMenu } from '../../components/filters/filtersMenu';
+import { BookRow } from '../../components/books/rowBook';
+import '../../styles/books/myBooks.css';
+
+// Função auxiliar para centralizar os handlers de mudança
+const createChangeHandler =
+  (setter: React.Dispatch<React.SetStateAction<string>>) =>
+  (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+    setter(e.target.value);
 
 export default function MyBooks() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -21,56 +28,54 @@ export default function MyBooks() {
 
   const setModal = useSetAtom(modalAtom);
   const navigate = useNavigate();
-
   const [books, setBooks] = useState<IBook[]>([]);
   const { mutateAsync: allBooks } = useGetBooks();
 
+  // Busca os livros ao montar o componente
   useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const { data } = await allBooks();
-        setBooks(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchBooks();
+    allBooks()
+      .then(({ data }) => setBooks(data))
+      .catch(console.error);
   }, [allBooks]);
 
-  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+  // Handlers utilizando a função auxiliar
+  const handleSearchChange = createChangeHandler(setSearchTerm);
+  const handleAuthorChange = createChangeHandler(setAuthorFilter);
+  const handleGenreChange = createChangeHandler(setGenreFilter);
+  const handleYearChange = createChangeHandler(setYearFilter);
+  const handleRatingChange = createChangeHandler(setRatingFilter);
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    navigate('/');
   };
 
-  const handleAuthorChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setAuthorFilter(event.target.value);
-  };
+  // Filtra os livros conforme os filtros e pesquisa
+  const filteredBooks = useMemo(
+    () =>
+      books.filter(
+        (book) =>
+          book.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+          (!authorFilter ||
+            book.author.toLowerCase().includes(authorFilter.toLowerCase())) &&
+          (!genreFilter || book.genre === genreFilter) &&
+          (!yearFilter || book.year.includes(yearFilter)) &&
+          (!ratingFilter || book.rating === parseInt(ratingFilter)),
+      ),
+    [books, searchTerm, authorFilter, genreFilter, yearFilter, ratingFilter],
+  );
 
-  const handleGenreChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setGenreFilter(event.target.value);
-  };
+  const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
+  const displayedBooks = useMemo(() => {
+    const start = (currentPage - 1) * booksPerPage;
+    return filteredBooks.slice(start, start + booksPerPage);
+  }, [filteredBooks, currentPage, booksPerPage]);
 
-  const handleYearChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setYearFilter(event.target.value);
-  };
+  const handlePreviousPage = () =>
+    currentPage > 1 && setCurrentPage((prev) => prev - 1);
+  const handleNextPage = () =>
+    currentPage < totalPages && setCurrentPage((prev) => prev + 1);
 
-  const handleRatingChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setRatingFilter(event.target.value);
-  };
-
-  const filteredBooks = useMemo(() => {
-    return books.filter((book: IBook) => {
-      return (
-        book.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        (authorFilter
-          ? book.author.toLowerCase().includes(authorFilter.toLowerCase())
-          : true) &&
-        (genreFilter ? book.genre === genreFilter : true) &&
-        (yearFilter ? book.year.includes(yearFilter) : true) &&
-        (ratingFilter ? book.rating === parseInt(ratingFilter) : true)
-      );
-    });
-  }, [books, searchTerm, authorFilter, genreFilter, yearFilter, ratingFilter]);
   const handleAddClick = () => {
     setModal({
       open: true,
@@ -90,28 +95,8 @@ export default function MyBooks() {
       message: 'Edite as informações do livro',
       confirmButtonText: 'Salvar alterações',
       cancelButtonText: 'Cancelar',
-      formData: book, // Passando as informações do livro para o modal
+      formData: book,
     });
-  };
-
-  const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
-
-  const displayedBooks = useMemo(() => {
-    const startIndex = (currentPage - 1) * booksPerPage;
-    const endIndex = startIndex + booksPerPage;
-    return filteredBooks.slice(startIndex, endIndex);
-  }, [filteredBooks, currentPage, booksPerPage]);
-
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
   };
 
   const handleDeleteClick = (book: IBook) => {
@@ -124,10 +109,8 @@ export default function MyBooks() {
       cancelButtonText: 'Não',
       onConfirm: async () => {
         try {
-          // Chame a função de exclusão aqui
-          await deleteBook(book.id || ''); // Substitua `deleteBook` pela função da API de exclusão
-          // Atualize a lista de livros após excluir
-          setBooks((prevBooks) => prevBooks.filter((b) => b.id !== book.id));
+          await deleteBook(book.id || '');
+          setBooks((prev) => prev.filter((b) => b.id !== book.id));
           setModal({
             open: true,
             type: 'success',
@@ -143,22 +126,21 @@ export default function MyBooks() {
           });
         }
       },
-      formData: book, // Passando as informações do livro para o modal
+      formData: book,
     });
   };
 
-  const truncateText = (text: string, maxLength: number) => {
-    return text.length > maxLength
-      ? text.substring(0, maxLength) + '...'
-      : text;
-  };
+  const handleViewClick = (book: IBook) => navigate(`/viewBook/${book.id}`);
 
-  const handleViewClick = (book: IBook) => {
-    navigate(`/viewBook/${book.id}`);
-  };
-
-  const authors = [...new Set(books.map((book) => book.author))];
-  const years = generateYearRange(new Date().getFullYear(), 1900);
+  // Gera filtros dinâmicos
+  const authors = useMemo(
+    () => [...new Set(books.map((book) => book.author))],
+    [books],
+  );
+  const years = useMemo(
+    () => generateYearRange(new Date().getFullYear(), 1900),
+    [],
+  );
   const genres = [
     'Ficção Científica',
     'Romance',
@@ -168,6 +150,7 @@ export default function MyBooks() {
     'Autoajuda',
     'Outro',
   ];
+
   return (
     <div className="container">
       <div className="header">
@@ -211,45 +194,19 @@ export default function MyBooks() {
           </tr>
         </thead>
         <tbody>
-          {filteredBooks.length > 0 ? (
-            displayedBooks.map((book: IBook, index: number) => (
-              <tr key={index}>
-                <td>{book.title}</td>
-                <td>{book.author}</td>
-                <td>{book.year}</td>
-                <td>{book.genre}</td>
-                <td>{truncateText(book.synopsis, 12)}</td>
-                <td>{truncateText(book.review, 12)}</td>
-                <td>{book.rating}</td>
-                <td>
-                  <button
-                    onClick={() => handleEditClick(book)}
-                    className="icon-button"
-                  >
-                    <FaEdit />{' '}
-                  </button>
-                </td>
-                <td>
-                  <button
-                    onClick={() => handleDeleteClick(book)}
-                    className="icon-button"
-                  >
-                    <FaTrashAlt />
-                  </button>
-                </td>
-                <td>
-                  <button
-                    onClick={() => handleViewClick(book)}
-                    className="icon-button"
-                  >
-                    <FaEye />
-                  </button>
-                </td>
-              </tr>
+          {filteredBooks.length ? (
+            displayedBooks.map((book, index) => (
+              <BookRow
+                key={index}
+                book={book}
+                onEdit={handleEditClick}
+                onDelete={handleDeleteClick}
+                onView={handleViewClick}
+              />
             ))
           ) : (
             <tr>
-              <td colSpan={3}>Nenhum livro encontrado</td>
+              <td colSpan={10}>Nenhum livro encontrado</td>
             </tr>
           )}
         </tbody>
@@ -263,6 +220,9 @@ export default function MyBooks() {
         </span>
         <button onClick={handleNextPage} disabled={currentPage === totalPages}>
           &gt;
+        </button>
+        <button className="icon-button logout" onClick={handleLogout}>
+          <FaSignOutAlt />
         </button>
       </div>
     </div>

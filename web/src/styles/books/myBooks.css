@@ -94,3 +94,59 @@
   font-weight: bold;
   margin: 0 10px;
 }
+
+.logout {
+  background: none;
+  border: none;
+  margin-left: 70%;
+  color: #007bff;
+  cursor: pointer;
+  width: 47px;
+  align-content: flex-end;
+}
+
+@media (max-width: 868px) {
+  .search-input {
+    width: 70%;
+    height: 40px;
+    font-size: 14px;
+  }
+
+  .header {
+    gap: 10px;
+  }
+
+  .add-button {
+    width: 30%;
+    height: 40px;
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+
+  .book-table th,
+  .book-table td {
+    padding: 6px;
+  }
+
+  .book-table th {
+    font-size: 12px;
+  }
+
+  .book-table td {
+    font-size: 12px;
+  }
+
+  .icon-button {
+    font-size: 8px;
+  }
+
+  .pagination button {
+    width: 30px;
+    padding: 4px 8px;
+    font-size: 14px;
+  }
+
+  .pagination span {
+    font-size: 14px;
+  }
+}

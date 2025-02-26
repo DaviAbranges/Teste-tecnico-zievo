@@ -133,3 +133,12 @@ button:hover:not(:disabled) {
   font-size: 14px;
   color: #353535cb;
 }
+
+@media (max-width: 868px) {
+  .login-form {
+    width: 100%;
+  }
+  .div-logo {
+    display: none;
+  }
+}
