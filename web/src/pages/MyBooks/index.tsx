@@ -7,9 +7,18 @@ import { modalAtom } from '../../store/modal';
 import { deleteBook } from '../../api/books/delete-books';
 import { useNavigate } from 'react-router-dom';
 import { FaEdit, FaTrashAlt, FaEye } from 'react-icons/fa';
+import { generateYearRange } from '../../utils/dateUtils';
+import { FiltersMenu } from '../../components/filters/filtersMenu';
 
 export default function MyBooks() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [authorFilter, setAuthorFilter] = useState('');
+  const [genreFilter, setGenreFilter] = useState('');
+  const [yearFilter, setYearFilter] = useState('');
+  const [ratingFilter, setRatingFilter] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const booksPerPage = 10;
+
   const setModal = useSetAtom(modalAtom);
   const navigate = useNavigate();
 
@@ -33,14 +42,35 @@ export default function MyBooks() {
     setSearchTerm(event.target.value);
   };
 
-  const filteredBooks = useMemo(
-    () =>
-      books.filter((book: IBook) =>
-        book.title.toLowerCase().includes(searchTerm.toLowerCase()),
-      ),
-    [books, searchTerm],
-  );
+  const handleAuthorChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setAuthorFilter(event.target.value);
+  };
 
+  const handleGenreChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setGenreFilter(event.target.value);
+  };
+
+  const handleYearChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setYearFilter(event.target.value);
+  };
+
+  const handleRatingChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setRatingFilter(event.target.value);
+  };
+
+  const filteredBooks = useMemo(() => {
+    return books.filter((book: IBook) => {
+      return (
+        book.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        (authorFilter
+          ? book.author.toLowerCase().includes(authorFilter.toLowerCase())
+          : true) &&
+        (genreFilter ? book.genre === genreFilter : true) &&
+        (yearFilter ? book.year.includes(yearFilter) : true) &&
+        (ratingFilter ? book.rating === parseInt(ratingFilter) : true)
+      );
+    });
+  }, [books, searchTerm, authorFilter, genreFilter, yearFilter, ratingFilter]);
   const handleAddClick = () => {
     setModal({
       open: true,
@@ -62,6 +92,26 @@ export default function MyBooks() {
       cancelButtonText: 'Cancelar',
       formData: book, // Passando as informações do livro para o modal
     });
+  };
+
+  const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
+
+  const displayedBooks = useMemo(() => {
+    const startIndex = (currentPage - 1) * booksPerPage;
+    const endIndex = startIndex + booksPerPage;
+    return filteredBooks.slice(startIndex, endIndex);
+  }, [filteredBooks, currentPage, booksPerPage]);
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
   const handleDeleteClick = (book: IBook) => {
@@ -106,6 +156,18 @@ export default function MyBooks() {
   const handleViewClick = (book: IBook) => {
     navigate(`/viewBook/${book.id}`);
   };
+
+  const authors = [...new Set(books.map((book) => book.author))];
+  const years = generateYearRange(new Date().getFullYear(), 1900);
+  const genres = [
+    'Ficção Científica',
+    'Romance',
+    'Mistério',
+    'Fantasia',
+    'Biografia',
+    'Autoajuda',
+    'Outro',
+  ];
   return (
     <div className="container">
       <div className="header">
@@ -119,6 +181,19 @@ export default function MyBooks() {
         <button className="add-button" onClick={handleAddClick}>
           Inserir novo livro
         </button>
+        <FiltersMenu
+          authorFilter={authorFilter}
+          onAuthorChange={handleAuthorChange}
+          genreFilter={genreFilter}
+          onGenreChange={handleGenreChange}
+          yearFilter={yearFilter}
+          onYearChange={handleYearChange}
+          ratingFilter={ratingFilter}
+          onRatingChange={handleRatingChange}
+          authors={authors}
+          genres={genres}
+          years={years}
+        />
       </div>
       <table className="book-table">
         <thead>
@@ -137,7 +212,7 @@ export default function MyBooks() {
         </thead>
         <tbody>
           {filteredBooks.length > 0 ? (
-            filteredBooks.map((book: IBook, index: number) => (
+            displayedBooks.map((book: IBook, index: number) => (
               <tr key={index}>
                 <td>{book.title}</td>
                 <td>{book.author}</td>
@@ -179,6 +254,17 @@ export default function MyBooks() {
           )}
         </tbody>
       </table>
+      <div className="pagination">
+        <button onClick={handlePreviousPage} disabled={currentPage === 1}>
+          &lt;
+        </button>
+        <span>
+          Página {currentPage} de {totalPages}
+        </span>
+        <button onClick={handleNextPage} disabled={currentPage === totalPages}>
+          &gt;
+        </button>
+      </div>
     </div>
   );
 }

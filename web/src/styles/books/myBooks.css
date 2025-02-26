@@ -9,10 +9,11 @@
   justify-content: space-between;
   align-items: baseline;
   margin-bottom: 20px;
+  align-items: baseline;
 }
 
 .search-input {
-  width: 70%;
+  width: 58%;
   padding: 8px;
   height: 46px;
   font-size: 16px;
@@ -71,4 +72,25 @@
 
 .icon-button:hover {
   color: #007bff;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+  width: 100%;
+}
+
+.pagination button {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 100px;
+  cursor: pointer;
+  width: 40px;
+}
+
+.pagination span {
+  font-weight: bold;
+  margin: 0 10px;
 }
