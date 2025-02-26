@@ -55,8 +55,9 @@ cd Teste-tecnico-zievo
 ```bash
 cd api
 ```
+2. Abra o seu editor de código e crie o arquivo `.env` na raiz do projeto:
 
-2. Abra o seu editor de código, crie o arquivo `.env` e configure as variáveis de ambiente no arquivo:
+3. Copie todo o conteudo do arquivo `.env.example` e cole no arquivo `.env` configure as variáveis de ambiente do banco de dados no arquivo, conforme o exemplo:
 
 
 ```
@@ -69,7 +70,7 @@ DB_PASSWORD=root
 ```
 **Observação**: Mude as credenciais de acordo com sua necessidade. Caso esteja usando um banco de dados diferente ou um ambiente de produção, atualize o nome do banco, o usuário e a senha para as configurações correspondentes.
 
-3. Suba o ambiente Docker:
+4. Suba o ambiente Docker:
   ```bash
 docker-compose up -d
 ```
@@ -80,18 +81,18 @@ docker-compose up -d
 composer install
 ```
 
-5. Rode as migrations necessarias:
+6. Rode as migrations necessarias:
 
 ```bash
 php artisan migrate
 ```
 
-6. Rodar o servidor local:
+7. Rodar o servidor local:
 ```bash
 php artisan key:generate
 ```
 
-7. Rodar o servidor local:
+8. Rodar o servidor local:
 ```bash
 php artisan serve
 ```
