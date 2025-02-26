@@ -52,11 +52,11 @@ cd Teste-tecnico-zievo
 
 1. Entre na pasta api
 
-   ```bash
-   cd api
-   ```
+```bash
+cd api
+```
 
-2. Abra o seu editor de código e configure as variáveis de ambiente no arquivo `.env`:
+2. Abra o seu editor de código, crie o arquivo `.env` e configure as variáveis de ambiente no arquivo:
 
 
 ```
