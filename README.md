@@ -53,7 +53,7 @@ cd Teste-tecnico-zievo
 1. Entre na pasta api
 
    ```bash
-   cd backend
+   cd api
    ```
 
 2. Configure as variáveis de ambiente no arquivo `.env`:
